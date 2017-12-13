@@ -4,8 +4,8 @@ var boxWidth = box.offsetWidth;
 
 //hardcode target as center
 //randomize later
-var targetX = boxWidth / 2;
-var targetY = boxHeight / 2;
+var targetX = 600;
+var targetY = 600;
 
 
 console.log( "box height: " + boxHeight );
@@ -24,22 +24,26 @@ var distance = function (x0, y0, x1, y1) {
 
 
 var findIt = function(e) {
-  var x = e.screenX;
-  var y = e.screenY;
+  var x = e.clientX;
+  var y = e.clientY;
   console.log(targetX + " " + targetY);
   console.log(x + " " + y);
 
   //for some reason the top left corner is at (~10,~100) so subtract this from the coordinate position of the mouse
-  var dist = Math.floor(distance(targetX, targetY, x-10, y-100));
+  var dist = distance(targetX, targetY, x, y);
   console.log(dist);
+	
+  //scaled the distance to a number between 1 and 255 (grayscale)
+  var colorPercent = Math.floor(255 * (dist / findMinDist()));
 
-  document.getElementById("box").style.backgroundColor = 'rgb(' + [dist,dist,dist].join(',') + ')';
-  //console.log('rgb(' + [dist,dist,dist].join(',') + ')');
+  document.getElementById("box").style.backgroundColor = 'rgb(' + [colorPercent,colorPercent,colorPercent].join(',') + ')';
+  console.log('rgb(' + [colorPercent,colorPercent,colorPercent].join(',') + ')');
 }
-/*
-your OTHER FXNS
-*/
 
+//this is just to find where the 
+var findMinDist = function(){
+	return Math.min(distance(0, 0, targetX, targetY), distance(0, boxHeight, targetX, targetY), distance(boxWidth, 0, targetX, targetY), distance(boxWidth, boxWidth, targetX, targetY));
+};
 
 box.addEventListener("mousemove", findIt);
 
