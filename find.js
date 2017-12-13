@@ -4,8 +4,8 @@ var boxWidth = box.offsetWidth;
 
 //hardcode target as center
 //randomize later
-var targetX = 600;
-var targetY = 600;
+var targetX = 200;
+var targetY = 200;
 
 
 console.log( "box height: " + boxHeight );
@@ -34,10 +34,10 @@ var findIt = function(e) {
   console.log(dist);
 	
   //scaled the distance to a number between 1 and 255 (grayscale)
-  var colorPercent = Math.floor(255 * (dist / findMinDist()));
+  var colorPercent = 256 - Math.floor(255 * (dist / findMinDist()));
 
-  document.getElementById("box").style.backgroundColor = 'rgb(' + [colorPercent,colorPercent,colorPercent].join(',') + ')';
-  console.log('rgb(' + [colorPercent,colorPercent,colorPercent].join(',') + ')');
+  box.style.backgroundColor = 'rgb(' + [colorPercent,colorPercent,colorPercent].join(',') + ')';
+  //console.log('rgb(' + [colorPercent,colorPercent,colorPercent].join(',') + ')');
 }
 
 //this is just to find where the 
