@@ -1,11 +1,12 @@
+
 var box = document.getElementById("box");
 var boxHeight = box.offsetHeight;
 var boxWidth = box.offsetWidth;
 
 //hardcode target as center
 //randomize later
-var targetX = 200;
-var targetY = 200;
+var targetX = Math.floor(boxWidth * Math.random());
+var targetY = Math.floor(boxHeight * Math.random());
 
 
 console.log( "box height: " + boxHeight );
@@ -24,26 +25,32 @@ var distance = function (x0, y0, x1, y1) {
 
 
 var findIt = function(e) {
-  var x = e.clientX;
-  var y = e.clientY;
-  console.log(targetX + " " + targetY);
-  console.log(x + " " + y);
-
-  //for some reason the top left corner is at (~10,~100) so subtract this from the coordinate position of the mouse
-  var dist = distance(targetX, targetY, x, y);
-  console.log(dist);
-	
+  var x = e.pageX;
+  var y = e.pageY;
+  var dist = distance(targetX,targetY,x,y);
+  console.log("target: " + targetX + " " + targetY);
+  console.log("mouse: " + x + " " + y);
+  console.log("distance from mouse to targert: "+ dist);
+  var maxDistFromBoxCorners = Math.max(distance(0,0,x,y), distance(boxWidth,0,x,y), distance(0,boxHeight,x,y), distance(boxWidth,boxHeight,x,y));
+  console.log("max distance from corners: "+ maxDistFromBoxCorners);
+  console.log("ratio: " + dist/maxDistFromBoxCorners);
+  
+  dist = dist / maxDistFromBoxCorners;
   //scaled the distance to a number between 1 and 255 (grayscale)
-  var colorPercent = 256 - Math.floor(255 * (dist / findMinDist()));
-
-  box.style.backgroundColor = 'rgb(' + [colorPercent,colorPercent,colorPercent].join(',') + ')';
+  var colorPercent = Math.floor(255 * dist);
+  /*
+  dist = distance(targetX,targetY,x,y) / distance(boxHeight,boxWidth,targetX,targetY) is to get the ratio of how close you are to the designated target
+    If this ratio = 1, it is at the target.
+  Then you multiply this ratio by 255 to get the % of the color / the shade of the color.
+  */
+  console.log(colorPercent);
+  if (colorPercent <= 10){
+    document.getElementById("box").style.backgroundColor = "cyan";
+  }
+  else{
+    document.getElementById("box").style.backgroundColor = 'rgb(' + [colorPercent,colorPercent,colorPercent].join(',') + ')';
+  }
   //console.log('rgb(' + [colorPercent,colorPercent,colorPercent].join(',') + ')');
 }
 
-//this is just to find where the 
-var findMinDist = function(){
-	return Math.min(distance(0, 0, targetX, targetY), distance(0, boxHeight, targetX, targetY), distance(boxWidth, 0, targetX, targetY), distance(boxWidth, boxWidth, targetX, targetY));
-};
-
 box.addEventListener("mousemove", findIt);
-
